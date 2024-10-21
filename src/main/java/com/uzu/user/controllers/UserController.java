@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@Tag(name = "User Management")
+@Tag(name = "User Operation Management")
 @RequestMapping(value = "/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
