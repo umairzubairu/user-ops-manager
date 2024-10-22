@@ -3,9 +3,9 @@
 Following items are plan for TODO: 
 
 1. Basic User Operations (CRUD with Extended Functionality)
-   - Core Functions: The API should provide typical CRUD operations—create, read, update, delete—but you can enhance these
-    by adding features like:
-     -  Bulk Operations: Allow the API to handle bulk user creation, updates, or deletion with a single API call. 
+   - Core Functions: The API should provide typical CRUD operations—create, read, update, delete—but need to enhance these
+    operation by adding features like:
+     -  <s>Bulk Operations: Allow the API to handle bulk user creation, updates, or deletion with a single API call.</s>
      - Soft Deletes: Implement soft deletes (where user data is flagged as deleted but not physically removed), allowing for
       easy recovery of users. 
      - Audit Logs: Every create/update/delete action can generate an audit trail for tracking changes in user data over
