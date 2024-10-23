@@ -9,22 +9,28 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user_info")
-public class User {
+@Table(name = "audit")
+public class Audit {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
+    private String entityName;
 
-    private String lastName;
+    private Long entityId;
 
-    private boolean isDeleted = false;
+    private String action;
+
+    private String changedBy;
+
+    private LocalDateTime changedAt;
 
 }

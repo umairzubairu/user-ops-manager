@@ -2,14 +2,16 @@ package com.uzu.user.services.impl;
 
 import com.uzu.user.dtos.UserDTO;
 import com.uzu.user.dtos.UserRequest;
+import com.uzu.user.entities.Audit;
 import com.uzu.user.entities.User;
 import com.uzu.user.exceptions.DuplicateException;
 import com.uzu.user.exceptions.NotFoundException;
 import com.uzu.user.repositories.UserRepository;
+import com.uzu.user.services.AuditService;
 import com.uzu.user.services.UserService;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private static final int BATCH_SIZE = 1000;
+    private final AuditService auditService;
 
     @Override
     public UserDTO save(UserRequest userRequest) {
@@ -35,6 +37,9 @@ public class UserServiceImpl implements UserService {
         log.info("Going to save the User {}", userRequest);
         user = userRepository.save(user);
         log.info("Successfully Saved the User {}", user);
+        // Logging the audit - replace "system" with the actual user
+        auditService.logAudit("User", user.getId(), "CREATE", "system");
+
         return UserDTO.toDto(user);
     }
 
@@ -52,7 +57,7 @@ public class UserServiceImpl implements UserService {
         }
         // Convert UserRequest to User entities
         List<User> usersToSave = userRequests.stream().map(UserDTO::userRequestToEntity).collect(Collectors.toList());
-
+        int BATCH_SIZE = 1000;
         // Save in batches
         List<User> savedUsers = new ArrayList<>();
         for (int i = 0; i < usersToSave.size(); i += BATCH_SIZE) {
@@ -60,6 +65,14 @@ public class UserServiceImpl implements UserService {
             List<User> batch = usersToSave.subList(i, endIndex);
             savedUsers.addAll(userRepository.saveAll(batch));
         }
+
+        // Create audit records for the bulk operation
+        List<Audit> auditRecords = savedUsers.stream().map(user -> {
+            return Audit.builder().entityName("User").entityId(user.getId()).action("CREATE").changedBy("system").changedAt(LocalDateTime.now()).build();
+        }).collect(Collectors.toList());
+
+        // Log the audits in bulk
+        auditService.logAudits(auditRecords);
 
         // Converting saved Users back to DTOs
         return savedUsers.stream().map(UserDTO::toDto).collect(Collectors.toList());
@@ -82,6 +95,10 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(true);
         userRepository.save(user);
         log.info("Soft deleted the user with id {}", id);
+
+        // Logging the audit for update action - we can replace "system" with the actual user
+        auditService.logAudit("User", id, "DELETE", "system");
+
         // above logic is for soft delete and for hard delete we can use below option.
         // userRepository.delete(user);
     }
@@ -103,7 +120,12 @@ public class UserServiceImpl implements UserService {
         existingUser.setLastName(userRequest.getLastName());
 
         // Save updated user in the repository
+        log.info("Going to update the User {}", existingUser);
         User updatedUser = userRepository.save(existingUser);
+        log.info("Successfully Updated the User {}", updatedUser);
+
+        // Logging the audit for update action - we can replace "system" with the actual user
+        auditService.logAudit("User", updatedUser.getId(), "UPDATE", "system");
 
         // Return the updated user as a DTO
         return UserDTO.toDto(updatedUser);
