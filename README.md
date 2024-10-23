@@ -5,10 +5,15 @@ following operations for managing user data. It allows to interact with user res
 This document guide you to develop the understanding that how you can interact with endpoints, their functionality, and
 the expected request and response formats.
 
-- Create: We can create a single user or list of users in one go.
-- Read: We can retrieve a specific user by passing the id or all users.
-- Update: We can update a specific user by id.
-- Delete: We can delete a specific user by id.
+- Basic User Operations (CRUD with Extended Functionality): The API provides typical CRUD operations.
+    - Create: We can create a single user or list of users in one go.
+    - Read: We can retrieve a specific user by passing the id or all users.
+    - Update: We can update a specific user by id.
+    - Delete: We can delete a specific user by id. Currently implement soft deletes (where user data is flagged as
+      deleted but not physically removed), allowing for
+      easy recovery of users.
+- Audit Logs: Every create/update/delete action generate an audit trail for tracking changes in user data over
+  time.
 
 Note: Duplication validation check exist in create and update flow.
 
@@ -320,3 +325,7 @@ CREATE DATABASE your_database_name;
 
 With these steps, your application will start using MySQL as its primary database for data storage, but do remove
 in-memory (H2 from pom and yml setting with above) setting
+
+### TODO
+
+There are some action items that are draft as initial version in [TODO.md](/TODO.md). Will try to complete them in the free time. 
