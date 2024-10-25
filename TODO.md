@@ -82,5 +82,3 @@ Following items are plan for TODO:
     - Rate Limiting: Provide control over how many requests a user can send, with default settings to prevent abuse.
     - Caching for Efficiency: Introduce a cache layer for frequently queried data (like user profiles), reducing API load
     and improving response times.
-
-
