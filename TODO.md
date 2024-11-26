@@ -78,7 +78,7 @@ Following items are plan for TODO:
     their own pace.
     - Deprecation Warnings: Provide users with notices and suggestions when using deprecated endpoints, helping them
     migrate to new ones.
-15. <s>Rate Limiting and Caching Layer
+15. Rate Limiting and Caching Layer
     - Rate Limiting: Provide control over how many requests a user can send, with default settings to prevent abuse.
     - Caching for Efficiency: Introduce a cache layer for frequently queried data (like user profiles), reducing API load
-    and improving response times.</s>
+    and improving response times.
